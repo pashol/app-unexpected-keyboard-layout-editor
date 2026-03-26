@@ -122,9 +122,15 @@ const xmlSchema = z.object({
             .object({
                 name: z.string().optional(),
                 script: z.string().optional(),
-                bottom_row: z.coerce.boolean().optional(),
+                bottom_row: z
+                    .string()
+                    .transform((v) => v !== "false")
+                    .optional(),
                 /** Deprecated alias for `bottom_row`. */
-                bottomRow: z.coerce.boolean().optional(),
+                bottomRow: z
+                    .string()
+                    .transform((v) => v !== "false")
+                    .optional(),
                 width: z.coerce.number().positive().optional(),
             })
             .transform((o) => ({
