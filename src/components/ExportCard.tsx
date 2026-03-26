@@ -1,6 +1,7 @@
 import { useCallback, useState } from "preact/hooks";
 import * as xml2js from "xml2js";
 import { KeyboardData, toXmlKeyboard } from "../lib/data";
+import { validateKeyboard } from "../lib/validate";
 
 /** Props for the ExportCard component */
 export interface ExportCardProps {
@@ -22,12 +23,24 @@ export function ExportCard(props: ExportCardProps) {
         setXml(builder.buildObject(toXmlKeyboard(props.keyboard)));
     }, [props.keyboard, setXml]);
 
+    const warnings = validateKeyboard(props.keyboard);
+
     return (
         <div class="card mt-5">
             <div class="card-header">
                 <h4 class="card-title mb-0">Export</h4>
             </div>
             <div class="card-body">
+                {warnings.length > 0 && (
+                    <div class="alert alert-warning mb-3">
+                        <strong>Layout warnings:</strong>
+                        <ul class="mb-0 mt-1">
+                            {warnings.map((w, i) => (
+                                <li key={i}>{w}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 <div class="d-flex justify-content-between align-items-center w-100">
                     <button class="btn btn-primary" onClick={exportXml}>
                         Export to XML
