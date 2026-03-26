@@ -71,7 +71,7 @@ export function NewCard(props: NewCardProps) {
                                 Import from XML
                             </label>
                             <a
-                                href="https://github.com/Julow/Unexpected-Keyboard/tree/master/res/xml"
+                                href="https://github.com/pashol/Unexpected-Keyboard/tree/master/res/xml"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="form-label"

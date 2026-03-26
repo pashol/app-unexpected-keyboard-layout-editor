@@ -1,8 +1,20 @@
-# [Unexpected Keyboard Layout Editor](https://unexpected-keyboard-layout-editor.lixquid.com)
+# [Unexpected Keyboard Layout Editor](https://uk-layout-editor.vercel.app/)
 
 A tool for creating and editing layouts for the Unexpected Keyboard for Android devices.
 
-https://unexpected-keyboard-layout-editor.lixquid.com
+https://uk-layout-editor.vercel.app/
+
+## Changes in This Fork
+
+This is a fork of [lixquid/app-unexpected-keyboard-layout-editor](https://github.com/lixquid/app-unexpected-keyboard-layout-editor), updated to target [pashol/Unexpected-Keyboard](https://github.com/pashol/Unexpected-Keyboard).
+
+Improvements over the original:
+
+- Fixed `bottom_row` XML parsing bug (`z.coerce.boolean()` misread `"false"` as `true`)
+- Improved duplicate key warnings on import
+- Completed KeyLegend icons and labels to mirror the Android keyboard
+- Completed KeyInput autocomplete list to match upstream `KeyValue.java`
+- Added layout validation matching upstream `check_layout.py` rules
 
 ## How to Use
 
@@ -25,7 +37,7 @@ https://unexpected-keyboard-layout-editor.lixquid.com
 1. Clone the repository
 2. Install dependencies: `yarn install`
 3. Start the development server: `yarn start`
-4. Open http://localhost:1234 in your browser
+4. Open http://localhost:8080 in your browser
 
 Changes to the source files will be automatically reloaded in the browser.
 

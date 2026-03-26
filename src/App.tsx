@@ -43,18 +43,11 @@ export function App() {
                         >
                             <i class="bi bi-moon-fill" />
                         </button>
-                        <a
-                            href="https://lixquid.com"
-                            class="btn btn-outline-primary float-end"
-                        >
-                            <i class="bi bi-box-arrow-up-right me-2" />
-                            lixquid.com
-                        </a>
                     </div>
                 </div>
                 <p class="lead mb-5">
                     A layout editor for the{" "}
-                    <a href="https://github.com/Julow/Unexpected-Keyboard">
+                    <a href="https://github.com/pashol/Unexpected-Keyboard">
                         Unexpected Keyboard
                     </a>{" "}
                     for Android devices. Get it on{" "}
@@ -150,7 +143,7 @@ export function App() {
                 </div>
                 <ExportCard keyboard={keyboard} />
                 <div class="mt-5 text-end">
-                    <a href="https://github.com/lixquid/app-unexpected-keyboard-layout-editor">
+                    <a href="https://github.com/pashol/app-unexpected-keyboard-layout-editor">
                         <i class="bi bi-box-arrow-up-right me-2" />
                         Source code
                     </a>
