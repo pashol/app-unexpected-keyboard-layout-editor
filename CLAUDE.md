@@ -56,7 +56,7 @@ key5(w)   key0(c)  key6(e)
 key3(sw)  key8(s)  key4(se)
 ```
 
-**XML format gap**: The editor reads and writes the `key0`–`key8` attribute format. The upstream project's user-facing layouts (in `srcs/layouts/`) use compass direction attributes (`c`, `nw`, `n`, `ne`, `w`, `e`, `sw`, `s`, `se`). The editor does not currently parse or emit the compass format.
+**XML format gap**: The editor reads and writes the `key0`–`key8` attribute format, which matches almost all layouts in the upstream repo. The exception is `latn_qwerty_us.xml`, which uses compass direction attributes (`c`, `nw`, `n`, `ne`, `w`, `e`, `sw`, `s`, `se`). The editor does not currently parse or emit the compass format.
 
 **Upstream XML format** (for reference when extending the editor):
 - `<keyboard name="..." script="..." bottom_row="false">` — `bottom_row` defaults to true
