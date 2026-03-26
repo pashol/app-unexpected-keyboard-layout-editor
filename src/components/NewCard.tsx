@@ -1,11 +1,6 @@
 import { useState } from "preact/hooks";
 import * as xml2js from "xml2js";
-import {
-    fromXmlKeyboard,
-    isXmlKeyboard,
-    KeyboardData,
-    XmlKeyboard,
-} from "../lib/data";
+import { fromXmlKeyboard, KeyboardData, parseXmlKeyboard } from "../lib/data";
 import { keyboards } from "../lib/keyboards";
 
 /** Props for the NewCard component */
@@ -103,16 +98,14 @@ export function NewCard(props: NewCardProps) {
 
                                         console.log("Parsed XML: ", result);
 
-                                        const xmlError = isXmlKeyboard(result);
-                                        if (xmlError) {
+                                        const parsed = parseXmlKeyboard(result);
+                                        if (typeof parsed === "string") {
                                             throw new Error(
                                                 "Not an Unexpected Keyboard XML file: " +
-                                                    xmlError,
+                                                    parsed,
                                             );
                                         }
-                                        const k = fromXmlKeyboard(
-                                            result as XmlKeyboard,
-                                        );
+                                        const k = fromXmlKeyboard(parsed);
 
                                         console.log("Parsed Keyboard: ", k);
                                         props.setKeyboard(k);

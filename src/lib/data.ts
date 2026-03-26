@@ -266,13 +266,16 @@ export function fromXmlKeyboard(xml: XmlKeyboard): KeyboardData {
     };
 }
 
-/** Returns `undefined` if an object is an {@link XmlKeyboard}, otherwise an error message. */
-export function isXmlKeyboard(xml: unknown): string | undefined {
+/**
+ * Parses an unknown value as an {@link XmlKeyboard} with all numeric fields
+ * coerced to numbers. Returns the parsed object, or an error message string.
+ */
+export function parseXmlKeyboard(xml: unknown): XmlKeyboard | string {
     const result = xmlSchema.safeParse(xml);
     if (!result.success) {
         return result.error.message;
     }
-    return undefined;
+    return result.data;
 }
 
 //#endregion

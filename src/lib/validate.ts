@@ -330,14 +330,18 @@ export function validateKeyboard(data: KeyboardData): string[] {
     const missingPunct = ASCII_PUNCT.filter((c) => !keySet.has(c));
     if (missingPunct.length > 0 && missingPunct.length < ASCII_PUNCT.length)
         warnings.push(
-            `Layout includes some ASCII punctuation but not all, missing: ${missingPunct.sort().join(", ")}`,
+            `Layout includes some ASCII punctuation but not all, missing: ${missingPunct
+                .sort()
+                .join(", ")}`,
         );
 
     // Missing some but not all digits
     const missingDigits = DIGITS.filter((d) => !keySet.has(d));
     if (missingDigits.length > 0 && missingDigits.length < DIGITS.length)
         warnings.push(
-            `Layout includes some digits but not all, missing: ${missingDigits.sort().join(", ")}`,
+            `Layout includes some digits but not all, missing: ${missingDigits
+                .sort()
+                .join(", ")}`,
         );
 
     // Required: backspace and delete
@@ -346,7 +350,9 @@ export function validateKeyboard(data: KeyboardData): string[] {
     );
     if (missingImportant.length > 0)
         warnings.push(
-            `Layout doesn't define some important keys, missing: ${missingImportant.join(", ")}`,
+            `Layout doesn't define some important keys, missing: ${missingImportant.join(
+                ", ",
+            )}`,
         );
 
     // Prohibited: editing keys
@@ -365,7 +371,9 @@ export function validateKeyboard(data: KeyboardData): string[] {
     const foundAuto = AUTO_ADDED_KEYS.filter((k) => keySet.has(k));
     if (foundAuto.length > 0)
         warnings.push(
-            `These keys are added automatically, remove them: ${foundAuto.join(", ")}`,
+            `These keys are added automatically, remove them: ${foundAuto.join(
+                ", ",
+            )}`,
         );
 
     // "loc" used as a plain symbol
@@ -376,7 +384,9 @@ export function validateKeyboard(data: KeyboardData): string[] {
     const keysWithWS = allKeys.filter((k) => k !== k.trim());
     if (keysWithWS.length > 0)
         warnings.push(
-            `Some keys contain leading/trailing whitespace: ${keysWithWS.join(", ")}`,
+            `Some keys contain leading/trailing whitespace: ${keysWithWS.join(
+                ", ",
+            )}`,
         );
 
     // Latin script requirements (script defaults to "latin" when unset)
@@ -401,14 +411,18 @@ export function validateKeyboard(data: KeyboardData): string[] {
         const missingBR = [...BOTTOM_ROW_KEYS].filter((k) => !keySet.has(k));
         if (missingBR.length > 0)
             warnings.push(
-                `Layout redefines the bottom row but some important keys are missing: ${missingBR.sort().join(", ")}`,
+                `Layout redefines the bottom row but some important keys are missing: ${missingBR
+                    .sort()
+                    .join(", ")}`,
             );
     } else {
         // Using built-in bottom row: must not duplicate its keys
         const unexpectedBR = [...BOTTOM_ROW_KEYS].filter((k) => keySet.has(k));
         if (unexpectedBR.length > 0)
             warnings.push(
-                `Layout contains keys already in the built-in bottom row: ${unexpectedBR.sort().join(", ")}`,
+                `Layout contains keys already in the built-in bottom row: ${unexpectedBR
+                    .sort()
+                    .join(", ")}`,
             );
     }
 
