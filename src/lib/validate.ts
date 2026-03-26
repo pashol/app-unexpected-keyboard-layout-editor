@@ -257,27 +257,45 @@ const AUTO_ADDED_KEYS = ["f11_placeholder", "f12_placeholder"];
 const ASCII_PUNCT = Array.from(`~!@#$%^&*(){}\`[]=\\-_;:/.,?<>'"+|`);
 const DIGITS = Array.from("0123456789");
 
-/** Collect all non-empty key values from a keyboard. */
-function collectKeys(data: KeyboardData): string[] {
-    const keys: string[] = [];
-    for (const row of data.rows) {
-        for (const key of row.keys) {
-            for (const k of [
-                key.key0,
-                key.key1,
-                key.key2,
-                key.key3,
-                key.key4,
-                key.key5,
-                key.key6,
-                key.key7,
-                key.key8,
-            ]) {
-                if (k !== "") keys.push(k);
+const KEY_POSITION_NAMES: Record<string, string> = {
+    key0: "center",
+    key1: "top-left",
+    key2: "top-right",
+    key3: "bottom-left",
+    key4: "bottom-right",
+    key5: "left",
+    key6: "right",
+    key7: "top",
+    key8: "bottom",
+};
+
+interface KeyLocation {
+    value: string;
+    row: number;
+    key: number;
+    position: string;
+}
+
+/** Collect all non-empty key values with their locations. */
+function collectKeyLocations(data: KeyboardData): KeyLocation[] {
+    const locations: KeyLocation[] = [];
+    data.rows.forEach((row, rowIdx) => {
+        row.keys.forEach((key, keyIdx) => {
+            for (const pos of Object.keys(KEY_POSITION_NAMES) as Array<
+                keyof typeof KEY_POSITION_NAMES
+            >) {
+                const v = key[pos as keyof typeof key] as string;
+                if (v !== "")
+                    locations.push({
+                        value: v,
+                        row: rowIdx + 1,
+                        key: keyIdx + 1,
+                        position: KEY_POSITION_NAMES[pos]!,
+                    });
             }
-        }
-    }
-    return keys;
+        });
+    });
+    return locations;
 }
 
 /**
@@ -286,18 +304,27 @@ function collectKeys(data: KeyboardData): string[] {
  */
 export function validateKeyboard(data: KeyboardData): string[] {
     const warnings: string[] = [];
-    const allKeys = collectKeys(data);
+    const locations = collectKeyLocations(data);
+    const allKeys = locations.map((l) => l.value);
     const keySet = new Set(allKeys);
 
-    // Duplicate keys
-    const seen = new Set<string>();
-    const dups = new Set<string>();
-    for (const k of allKeys) {
-        if (seen.has(k)) dups.add(k);
-        seen.add(k);
+    // Duplicate keys — report each duplicate value with all its locations
+    const seen = new Map<string, KeyLocation[]>();
+    for (const loc of locations) {
+        const existing = seen.get(loc.value);
+        if (existing) existing.push(loc);
+        else seen.set(loc.value, [loc]);
     }
-    if (dups.size > 0)
-        warnings.push(`Duplicate keys: ${[...dups].sort().join(", ")}`);
+    for (const [value, locs] of [...seen].sort(([a], [b]) =>
+        a.localeCompare(b),
+    )) {
+        if (locs.length > 1) {
+            const places = locs
+                .map((l) => `row ${l.row} key ${l.key} ${l.position}`)
+                .join(", ");
+            warnings.push(`Duplicate key "${value}": ${places}`);
+        }
+    }
 
     // Missing some but not all ASCII punctuation
     const missingPunct = ASCII_PUNCT.filter((c) => !keySet.has(c));
