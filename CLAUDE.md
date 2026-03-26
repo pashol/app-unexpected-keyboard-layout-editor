@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A web-based editor for creating and editing keyboard layouts for the [Unexpected Keyboard](https://github.com/Julow/Unexpected-Keyboard) Android app. It imports/exports the XML format used by that app.
+A web-based editor for creating and editing keyboard layouts for the [pashol/Unexpected-Keyboard](https://github.com/pashol/Unexpected-Keyboard) Android app (a fork of Julow/Unexpected-Keyboard). It imports/exports the XML format used by that app.
 
 ## Commands
 
@@ -48,8 +48,22 @@ The central state is a `KeyboardData` object held in `App.tsx`, passed down to c
 
 ### Key Concepts
 
-**Key positions**: Each `KeyData` has 9 positions (`key0`–`key8`) representing tap and 8 swipe directions. `key0` is the default/center. `key5` is the shift position.
+**Key positions**: Each `KeyData` has 9 positions representing tap and 8 swipe directions, stored internally as `key0`–`key8`. The mapping to the upstream XML compass format is:
 
-**XML character escaping**: The app handles Android-specific escaping for characters like `@`, `#`, `\`, `?` in the XML output (see `escapeAndroid` in `data.ts`).
+```
+key1(nw)  key7(n)  key2(ne)
+key5(w)   key0(c)  key6(e)
+key3(sw)  key8(s)  key4(se)
+```
+
+**XML format gap**: The editor reads and writes the **old** `key0`–`key8` attribute format. The upstream project's newer layouts use compass direction attributes (`c`, `nw`, `n`, `ne`, `w`, `e`, `sw`, `s`, `se`). The editor does not currently parse or emit the compass format.
+
+**Upstream XML format** (for reference when extending the editor):
+- `<keyboard name="..." script="..." bottom_row="false">` — `bottom_row` defaults to true
+- `<row height="0.95">` — height defaults to 1
+- `<key c="a" nw="!" ne="1" sw="loc §" width="1.5" shift="0.5">` — `width` defaults to 1, `shift` (left padding) defaults to 0
+- `loc ` prefix on a key value marks it as hidden unless needed by "Add keys to keyboard"
+- Special key values: `shift`, `backspace`, `enter`, `space`, `fn`, `ctrl`, `alt`, `action`, `switch_numeric`, `switch_text`, `switch_emoji`, `capslock`, `compose`, and accent modifiers like `accent_aigu`. Full list in [upstream doc](https://github.com/pashol/Unexpected-Keyboard/blob/master/doc/Possible-key-values.md).
+- Android XML escaping: `@`, `#`, `\`, `?` must be prefixed with `\` in layout files included in the app (but not in custom layouts loaded by users).
 
 **`Unexpected-Keyboard/`**: A git submodule for the upstream app — used as a reference for the XML schema, not imported as code.
