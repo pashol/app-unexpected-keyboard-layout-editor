@@ -1,4 +1,5 @@
 import { KeyboardData } from "./data";
+import { templateGroups, TemplateGroup } from "./layoutTemplates";
 
 export const qwerty: KeyboardData = {
     name: "QWERTY",
@@ -418,7 +419,30 @@ export const qwerty: KeyboardData = {
     bottomRow: true,
 };
 
-export const keyboards: Record<string, KeyboardData> = {
+/** Built-in templates always shown at the top. */
+export const builtinKeyboards: Record<string, KeyboardData> = {
     Blank: { name: "Custom Layout", script: "", bottomRow: true, rows: [] },
     QWERTY: qwerty,
 };
+
+/**
+ * All keyboard template groups, starting with the built-in group followed by
+ * the upstream layout groups sorted alphabetically.
+ */
+export const keyboardGroups: TemplateGroup[] = [
+    {
+        group: "Built-in",
+        templates: Object.entries(builtinKeyboards).map(([key, keyboard]) => ({
+            key,
+            keyboard,
+        })),
+    },
+    ...templateGroups,
+];
+
+/** Flat map of all keyboards by key (for backwards compatibility). */
+export const keyboards: Record<string, KeyboardData> = Object.fromEntries(
+    keyboardGroups.flatMap((g) =>
+        g.templates.map(({ key, keyboard }) => [key, keyboard]),
+    ),
+);

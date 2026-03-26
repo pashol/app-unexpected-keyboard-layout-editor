@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import * as xml2js from "xml2js";
 import { fromXmlKeyboard, KeyboardData, parseXmlKeyboard } from "../lib/data";
-import { keyboards } from "../lib/keyboards";
+import { keyboardGroups, keyboards } from "../lib/keyboards";
 
 /** Props for the NewCard component */
 export interface NewCardProps {
@@ -36,10 +36,16 @@ export function NewCard(props: NewCardProps) {
                                 setSelectedTemplate(template);
                             }}
                         >
-                            {Object.keys(keyboards).map((key) => (
-                                <option value={key} key={key}>
-                                    {key}
-                                </option>
+                            {keyboardGroups.map((group) => (
+                                <optgroup label={group.group} key={group.group}>
+                                    {group.templates.map(
+                                        ({ key, keyboard }) => (
+                                            <option value={key} key={key}>
+                                                {keyboard.name || key}
+                                            </option>
+                                        ),
+                                    )}
+                                </optgroup>
                             ))}
                         </select>
                         <div class="d-flex justify-content-end align-items-center">
@@ -53,7 +59,9 @@ export function NewCard(props: NewCardProps) {
                                 }}
                                 disabled={selectedTemplate.length === 0}
                             >
-                                Start with {selectedTemplate}
+                                Start with{" "}
+                                {keyboards[selectedTemplate]?.name ||
+                                    selectedTemplate}
                             </button>
                         </div>
                     </div>
